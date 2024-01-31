@@ -1,4 +1,3 @@
-#include "common.h"
 #include "string.h"
 #include "elf.h"
 #include "vmm.h"

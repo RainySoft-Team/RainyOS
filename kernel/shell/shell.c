@@ -8,10 +8,9 @@
 
 */
 
-#include "common.h"
 #include "shell.h"
 #include "console.h"
-#include "heap.h"
+#include "debug.h"
 #include "string.h"
 #include "fifo.h"
 #include "keyboard.h"
@@ -19,9 +18,6 @@
 
 #define MAX_COMMAND_LEN 100
 #define MAX_ARG_NR 30
-
-#define true 1
-#define false 0
 
 static int read_key_blocking(char *buf){
     while (fifo_status(&decoded_key) == 0);
@@ -39,10 +35,10 @@ static int cmd_parse(uint8_t *cmd_str, uint8_t **argv, uint8_t token) // 用uint
     uint8_t *next = cmd_str; // 下一个字符
     int argc = 0; // 这就是要返回的argc了
     while (*next) { // 循环到结束为止
-        while (*next == token) *next++; // 多个token就只保留第一个，windows cmd就是这么处理的
+        while (*next == token) next++; // 多个token就只保留第一个，windows cmd就是这么处理的
         if (*next == 0) break; // 如果跳过完token之后结束了，那就直接退出
         argv[argc] = next; // 将首指针赋值过去，从这里开始就是当前参数
-        while (*next && *next != token) *next++; // 跳到下一个token
+        while (*next && *next != token) next++; // 跳到下一个token
         if (*next) { // 如果这里有token字符
             *next++ = 0; // 将当前token字符设为0（结束符），next后移一个
         }
@@ -126,14 +122,15 @@ void shell_bugs(int argc){
     if (argc != 1){
         console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
     }
-    console_write("______________________________________\n");
-    console_write("|Bugs in this version you should know|\n");
-    console_write("|----------------------------------------------------------\n");
-    console_write("|Note: You should know these bugs to be happy in using    |\n");
-    console_write("|---------------------------------------------------------|\n");
-    console_write("|1.If you type some space keys in the command line, and y-|\n");
-    console_write("|ou press enter, your RainyOS will be crash.              |\n");
-    console_write("|---------------------------------------------------------|\n\n");
+    console_write("We haven't found bugs in RainyOS \\('v')/ \n");
+    // console_write("______________________________________\n");
+    // console_write("|Bugs in this version you should know|\n");
+    // console_write("|----------------------------------------------------------\n");
+    // console_write("|Note: You should know these bugs to be happy in using    |\n");
+    // console_write("|---------------------------------------------------------|\n");
+    // console_write("|1.If you type some space keys in the command line, and y-|\n");
+    // console_write("|ou press enter, your RainyOS will be crash.              |\n");
+    // console_write("|---------------------------------------------------------|\n\n");
 }
 
 void shell_help(int argc){
@@ -186,53 +183,73 @@ void shell_date(int argc){
     console_write("\n");
 }
 
+/**
+ * @brief shell内建命令
+ * 
+ */
+typedef struct builtin_cmd
+{
+    char *name;
+    void (*func)(int argc);
+} builtin_cmd_t;
+
+builtin_cmd_t builtin_cmds[] = {
+    {"clear", shell_clear},
+    {"ver", shell_ver},
+    {"build", shell_build},
+    {"help", shell_help},
+    {"test", shell_test},
+    {"credits", shell_credits},
+    {"bugs", shell_bugs},
+    {"date", shell_date},
+};
+
+// 内建命令数量
+const static int builtin_cmd_num = sizeof(builtin_cmds) / sizeof(builtin_cmd_t);
+
+int find_cmd(char *cmd)
+{
+    for (int i = 0; i < builtin_cmd_num; ++i)
+    {
+        if (strcmp(cmd, builtin_cmds[i].name) == 0){
+            return i;
+        }
+    }
+    return -1;
+}
+
 void shell()
 {
-    uint8_t com[MAX_COMMAND_LEN];
+    uint8_t cmd[MAX_COMMAND_LEN];
     uint8_t *argv[MAX_ARG_NR];
     int argc = -1;
 
     while (true) {
         console_write("RainyOS # "); // 提示符，可自行修改
-        
-        memset(com, 0, MAX_COMMAND_LEN); // 清空上轮输入
-        readline(com, MAX_COMMAND_LEN); // 读入一行
+
+        memset(cmd, 0, MAX_COMMAND_LEN); // 清空上轮输入
+        readline(cmd, MAX_COMMAND_LEN); // 读入一行
 
         // com就是完整的命令
-        if (com[0] == 0) continue; // 只有一个回车，continue
-        argc = cmd_parse(com, argv, ' ');
+        if (cmd[0] == 0) continue; // 只有一个回车，continue
+        argc = cmd_parse(cmd, argv, ' ');
         // argc, argv 都拿到了
         if (argc == -1) {
-            console_write("shell: error: number of arguments exceed MAX_ARG_NR(30)\n");
+            print_erro("shell: number of arguments exceed MAX_ARG_NR(30)");
+            continue;
+        } else if (argc == 0) {
+            print_warn("space is not a command");
             continue;
         }
 
-        if (!strcmp("clear", argv[0])){
-            shell_clear(argc);
+        int cmd_index = find_cmd(argv[0]);
+        if (cmd_index < 0) {
+            // 找不到该命令
+            console_write("Command not found.\n\n");
+        } else {
+            builtin_cmds[cmd_index].func(argc);
         }
-        else if (!strcmp("ver", argv[0])) {
-            shell_ver(argc);
-        }
-        else if (!strcmp("build", argv[0])) {
-            shell_build(argc);
-        }
-        else if (!strcmp("help", argv[0])) {
-            shell_help(argc);
-        }
-        else if (!strcmp("test", argv[0])) {
-            shell_test(argc);
-        }
-        else if (!strcmp("credits", argv[0])) {
-            shell_credits(argc);
-        }
-        else if (!strcmp("bugs", argv[0])) {
-            shell_bugs(argc);
-        }
-        else if (!strcmp("date", argv[0])) {
-            shell_date(argc);
-        }
-        else console_write("Command not found.\n\n");
     }
-    ASSERT(0 && "unknown error on reading keys.");
+    // ASSERT(0 && "unknown error on reading keys.");
 }
 

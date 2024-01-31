@@ -1,4 +1,5 @@
 #include "debug.h"
+#include "elf.h"
 
 static void print_stack_trace();
 
@@ -51,4 +52,3 @@ void print_stack_trace()
 		ebp = (uint32_t*)*ebp;
 	}
 }
-

@@ -1,5 +1,4 @@
 #include "timer.h"
-#include "debug.h"
 #include "common.h"
 #include "idt.h"
 #include "sched.h"

@@ -2,7 +2,6 @@
 #define INCLUDE_TASK_H_
 
 #include "types.h"
-#include "pmm.h"
 #include "vmm.h"
 
 // 进程状态描述

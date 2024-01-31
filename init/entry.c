@@ -22,7 +22,7 @@
 #include "sched.h"
 #include "keyboard.h"
 #include "shell.h"
-#include "cmos.h"
+#include "multiboot.h"
 
 // 内核初始化函数
 void kern_init();
@@ -81,25 +81,6 @@ __attribute__((section(".init.text"))) void kern_entry()
 	kern_init();
 }
 
-int printsf(int sf, char *str){
-	if (sf == 1){
-		printk_color(rc_black, rc_white, "[");
-		printk_color(rc_black, rc_green, "SUCCESS");
-		printk_color(rc_black, rc_white, "]");
-		printk(" ");
-		printk(str);
-		printk("\n");
-	}
-	else if (sf == 0){
-		printk_color(rc_black, rc_white, "[");
-		printk_color(rc_black, rc_red, " FAULT ");
-		printk_color(rc_black, rc_white, "]");
-		printk(" ");
-		printk(str);
-		printk("\n");
-	}
-}
-
 int flag = 0;
 
 int thread(void *arg)
@@ -121,26 +102,26 @@ void kern_init()
 {
 	console_write("Loading");
 
-	for (int i;i < 69;i++){
+	for (int i = 0; i < 69; i++){
 		init_timer(200);
 		console_write(">");
 	}
 
 	printk_color(rc_black, rc_light_cyan, "DONE");
 
-	printsf(1, "Boot RainyOS");
+	print_succ("Boot RainyOS");
 
 	init_debug();
 	init_gdt();
 	init_idt();
 
-	printsf(1, "Init debug");
-	printsf(1, "Init GDT");
-	printsf(1, "Init IDT");
+	print_succ("Init debug");
+	print_succ("Init GDT");
+	print_succ("Init IDT");
 
 	//console_clear();
-	printsf(1, "Load RainyOS Kernel");
-	printsf(1, "Load Entry Program");
+	print_succ("Load RainyOS Kernel");
+	print_succ("Load Entry Program");
 	printk_color(rc_white, rc_black, "RainyOS RainySoftTeam & RainyOSTeam 2022~2024\n");
 	printk_color(rc_white, rc_red, "RainyOS Alpha Version 0.12 Build 12\n");
 
