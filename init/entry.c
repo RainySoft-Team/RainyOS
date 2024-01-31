@@ -22,6 +22,7 @@
 #include "sched.h"
 #include "keyboard.h"
 #include "shell.h"
+#include "cmos.h"
 
 // 内核初始化函数
 void kern_init();
@@ -80,17 +81,8 @@ __attribute__((section(".init.text"))) void kern_entry()
 	kern_init();
 }
 
-int flag = 0;
-
-int thread(void *arg)
-{
-	shell();
-	
-	return 0;
-}
-
-int printsf(char *sf, char *str){
-	if (sf=="s"){
+int printsf(int sf, char *str){
+	if (sf == 1){
 		printk_color(rc_black, rc_white, "[");
 		printk_color(rc_black, rc_green, "SUCCESS");
 		printk_color(rc_black, rc_white, "]");
@@ -98,7 +90,7 @@ int printsf(char *sf, char *str){
 		printk(str);
 		printk("\n");
 	}
-	else if (sf=="f"){
+	else if (sf == 0){
 		printk_color(rc_black, rc_white, "[");
 		printk_color(rc_black, rc_red, " FAULT ");
 		printk_color(rc_black, rc_white, "]");
@@ -106,6 +98,23 @@ int printsf(char *sf, char *str){
 		printk(str);
 		printk("\n");
 	}
+}
+
+int flag = 0;
+
+int thread(void *arg)
+{
+	console_clear();
+
+	console_write_color("RainyOS v0.32 (Alpha, Jan 30 2024, 21:30:32) [GCC 12.2.0] on Machine\n", rc_black, rc_green);
+	console_write_color("RainyShell v0.12 (Alpha, Jan 30 2024, 21:20:32) [GCC 12.2.0] on RainyOS\n", rc_black, rc_green);
+	console_write_color("Type 'help' to see the help list table.\n", rc_black, rc_green);
+	console_write_color("WARNING: You should type 'bugs' to see the bugs in this version. Using careful!\n", rc_black, rc_red);
+	console_write_color("Now you are in the shell.\n\n", rc_black, rc_light_cyan);
+
+	shell();
+
+	return 0;
 }
 
 void kern_init()
@@ -119,19 +128,19 @@ void kern_init()
 
 	printk_color(rc_black, rc_light_cyan, "DONE");
 
-	printsf("s","Boot RainyOS");
+	printsf(1, "Boot RainyOS");
 
 	init_debug();
 	init_gdt();
 	init_idt();
 
-	printsf("s","Init debug");
-	printsf("s","Init GDT");
-	printsf("s","Init IDT");
+	printsf(1, "Init debug");
+	printsf(1, "Init GDT");
+	printsf(1, "Init IDT");
 
 	//console_clear();
-	printsf("s","Load RainyOS Kernel");
-	printsf("s","Load Entry Program");
+	printsf(1, "Load RainyOS Kernel");
+	printsf(1, "Load Entry Program");
 	printk_color(rc_white, rc_black, "RainyOS RainySoftTeam & RainyOSTeam 2022~2024\n");
 	printk_color(rc_white, rc_red, "RainyOS Alpha Version 0.12 Build 12\n");
 
