@@ -1,8 +1,6 @@
 #ifndef _CMOS_H_
 #define _CMOS_H_
 
-#define NEED_UTC_8
-
 #define CMOS_INDEX 0x70
 #define CMOS_DATA 0x71
 

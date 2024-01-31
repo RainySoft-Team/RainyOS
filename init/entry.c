@@ -90,7 +90,9 @@ int thread(void *arg)
 	console_write_color("RainyOS v0.32 (Alpha, Jan 30 2024, 21:30:32) [GCC 12.2.0] on Machine\n", rc_black, rc_green);
 	console_write_color("RainyShell v0.12 (Alpha, Jan 30 2024, 21:20:32) [GCC 12.2.0] on RainyOS\n", rc_black, rc_green);
 	console_write_color("Type 'help' to see the help list table.\n", rc_black, rc_green);
+	#ifdef HAVE_BUGS
 	console_write_color("WARNING: You should type 'bugs' to see the bugs in this version. Using careful!\n", rc_black, rc_red);
+	#endif
 	console_write_color("Now you are in the shell.\n\n", rc_black, rc_light_cyan);
 
 	shell();

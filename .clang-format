@@ -1,0 +1,14 @@
+# 缩进宽度
+IndentWidth: 4
+# Tab宽度
+TabWidth: 4
+# 连续赋值时，对齐所有等号
+AlignConsecutiveAssignments: true
+# 右对齐逃脱换行(使用反斜杠换行)的反斜杠
+AlignEscapedNewlines: Right
+# 允许短的if语句保持在同一行
+AllowShortIfStatementsOnASingleLine: true
+# 允许短的case标签放在同一行
+AllowShortCaseLabelsOnASingleLine: true
+# 允许短的循环保持在同一行
+AllowShortLoopsOnASingleLine: true
