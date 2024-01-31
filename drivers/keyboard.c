@@ -59,8 +59,8 @@ static void set_leds()
 
 void init_keyboard() //init keyboard
 {
-    uint32_t *keybuf = (uint32_t *) kmalloc(32);
-    uint32_t *dkey_buf = (uint32_t *) kmalloc(32);
+    uint32_t *keybuf = (uint32_t *) kmalloc(128);
+    uint32_t *dkey_buf = (uint32_t *) kmalloc(128);
     fifo_init(&keyfifo, 32, keybuf);
     fifo_init(&decoded_key, 32, dkey_buf);
 

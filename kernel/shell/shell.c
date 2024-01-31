@@ -1,6 +1,5 @@
 #include "common.h"
 #include "shell.h"
-#include "file.h"
 #include "console.h"
 //#include "fat16.h"
 #include "heap.h"
@@ -13,6 +12,12 @@
 
 #define true 1
 #define false 0
+
+static int read_key_blocking(char *buf){
+    while (fifo_status(&decoded_key) == 0);
+    *buf++ == fifo_get(&decoded_key);
+    return 0;
+}
 
 static int cmd_parse(uint8_t *cmd_str, uint8_t **argv, uint8_t token) // 用uint8_t是因为" "使用8位整数
 {
@@ -40,7 +45,7 @@ static int cmd_parse(uint8_t *cmd_str, uint8_t **argv, uint8_t token) // 用uint
 static void readline(char *buf, int cnt)
 {
     char *pos = buf;
-    while (sys_read(0, pos, 1) != -1 && (pos - buf) < cnt) { // 没打够字符并且不出错
+    while (read_key_blocking(pos) != -1 && (pos - buf) < cnt) { // 没打够字符并且不出错
         switch (*pos) {
             case '\n':
             case '\r':
@@ -116,6 +121,9 @@ void shell()
         */
         if (!strcmp("clear", argv[0])){
             console_clear();
+        }
+        else if (!strcmp("ver", argv[0])) {
+            console_write("Build 15");
         }
         else console_write("Command not found.\n");
     }
