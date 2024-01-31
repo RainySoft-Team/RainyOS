@@ -10,6 +10,7 @@
 
 #include "shell.h"
 #include "console.h"
+#include "debug.h"
 #include "string.h"
 #include "fifo.h"
 #include "keyboard.h"
@@ -121,14 +122,15 @@ void shell_bugs(int argc){
     if (argc != 1){
         console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
     }
-    console_write("______________________________________\n");
-    console_write("|Bugs in this version you should know|\n");
-    console_write("|----------------------------------------------------------\n");
-    console_write("|Note: You should know these bugs to be happy in using    |\n");
-    console_write("|---------------------------------------------------------|\n");
-    console_write("|1.If you type some space keys in the command line, and y-|\n");
-    console_write("|ou press enter, your RainyOS will be crash.              |\n");
-    console_write("|---------------------------------------------------------|\n\n");
+    console_write("We haven't found bugs in RainyOS \\('v')/ \n");
+    // console_write("______________________________________\n");
+    // console_write("|Bugs in this version you should know|\n");
+    // console_write("|----------------------------------------------------------\n");
+    // console_write("|Note: You should know these bugs to be happy in using    |\n");
+    // console_write("|---------------------------------------------------------|\n");
+    // console_write("|1.If you type some space keys in the command line, and y-|\n");
+    // console_write("|ou press enter, your RainyOS will be crash.              |\n");
+    // console_write("|---------------------------------------------------------|\n\n");
 }
 
 void shell_help(int argc){
@@ -233,7 +235,10 @@ void shell()
         argc = cmd_parse(cmd, argv, ' ');
         // argc, argv 都拿到了
         if (argc == -1) {
-            console_write("shell: error: number of arguments exceed MAX_ARG_NR(30)\n");
+            print_erro("shell: number of arguments exceed MAX_ARG_NR(30)");
+            continue;
+        } else if (argc == 0) {
+            print_warn("space is not a command");
             continue;
         }
 

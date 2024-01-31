@@ -22,6 +22,7 @@
 #include "sched.h"
 #include "keyboard.h"
 #include "shell.h"
+#include "multiboot.h"
 
 // 内核初始化函数
 void kern_init();
@@ -80,24 +81,6 @@ __attribute__((section(".init.text"))) void kern_entry()
 	kern_init();
 }
 
-void print_succs(char *str){
-	printk_color(rc_black, rc_white, "[");
-	printk_color(rc_black, rc_green, "SUCCESS");
-	printk_color(rc_black, rc_white, "]");
-	printk(" ");
-	printk(str);
-	printk("\n");
-}
-
-void print_fault(char *str){
-	printk_color(rc_black, rc_white, "[");
-	printk_color(rc_black, rc_red, " FAULT ");
-	printk_color(rc_black, rc_white, "]");
-	printk(" ");
-	printk(str);
-	printk("\n");
-}
-
 int flag = 0;
 
 int thread(void *arg)
@@ -126,19 +109,19 @@ void kern_init()
 
 	printk_color(rc_black, rc_light_cyan, "DONE");
 
-	print_succs("Boot RainyOS");
+	print_succ("Boot RainyOS");
 
 	init_debug();
 	init_gdt();
 	init_idt();
 
-	print_succs("Init debug");
-	print_succs("Init GDT");
-	print_succs("Init IDT");
+	print_succ("Init debug");
+	print_succ("Init GDT");
+	print_succ("Init IDT");
 
 	//console_clear();
-	print_succs("Load RainyOS Kernel");
-	print_succs("Load Entry Program");
+	print_succ("Load RainyOS Kernel");
+	print_succ("Load Entry Program");
 	printk_color(rc_white, rc_black, "RainyOS RainySoftTeam & RainyOSTeam 2022~2024\n");
 	printk_color(rc_white, rc_red, "RainyOS Alpha Version 0.12 Build 12\n");
 
