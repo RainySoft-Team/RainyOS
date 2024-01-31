@@ -164,4 +164,3 @@ void irq_handler(pt_regs *regs)
 		interrupt_handlers[regs->int_no](regs);
 	}
 }
-

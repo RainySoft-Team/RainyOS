@@ -86,6 +86,7 @@ void console_putc_color(char c, real_color_t back, real_color_t fore)
 	// 0x08 是 退格键 的 ASCII 码
 	// 0x09 是 tab 键 的 ASCII 码
 	if (c == 0x08 && cursor_x) {
+		  video_memory[cursor_y*80 + cursor_x - 1] = ' ' | attribute;
 	      cursor_x--;
 	} else if (c == 0x09) {
 	      cursor_x = (cursor_x+8) & ~(8-1);

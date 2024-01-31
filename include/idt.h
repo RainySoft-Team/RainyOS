@@ -53,6 +53,8 @@ void register_interrupt_handler(uint8_t n, interrupt_handler_t h);
 // 调用中断处理函数
 void isr_handler(pt_regs *regs);
 
+void inthandler21(int *esp);
+
 // 声明中断处理函数 0-19 属于 CPU 的异常中断
 // ISR:中断服务程序(interrupt service routine)
 void isr0(); 		// 0 #DE 除 0 异常 

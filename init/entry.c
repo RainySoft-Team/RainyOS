@@ -4,7 +4,7 @@
 
 	RainyOS system kernel entry program
 	
-	RainySoftTeam & RainyOSTeam RainyOS (C)Copyright 2022~2024
+	RainySoftTeam & RainyOSTeam RainyOS 2022~2024
 
 */
 
@@ -20,6 +20,8 @@
 #include "heap.h"
 #include "task.h"
 #include "sched.h"
+#include "keyboard.h"
+#include "shell.h"
 
 // 内核初始化函数
 void kern_init();
@@ -82,45 +84,91 @@ int flag = 0;
 
 int thread(void *arg)
 {
-	printk("Here is a thread!");
+	shell();
 	
 	return 0;
 }
 
+int printsf(char *sf, char *str){
+	if (sf=="s"){
+		printk_color(rc_black, rc_white, "[");
+		printk_color(rc_black, rc_green, "SUCCESS");
+		printk_color(rc_black, rc_white, "]");
+		printk(" ");
+		printk(str);
+		printk("\n");
+	}
+	else if (sf=="f"){
+		printk_color(rc_black, rc_white, "[");
+		printk_color(rc_black, rc_red, " FAULT ");
+		printk_color(rc_black, rc_white, "]");
+		printk(" ");
+		printk(str);
+		printk("\n");
+	}
+}
+
 void kern_init()
 {
+	console_write("Loading");
+
+	for (int i;i < 69;i++){
+		init_timer(200);
+		console_write(">");
+	}
+
+	printk_color(rc_black, rc_light_cyan, "DONE");
+
+	printsf("s","Boot RainyOS");
+
 	init_debug();
 	init_gdt();
 	init_idt();
 
-	console_clear();
-	printk_color(rc_black, rc_green, "RainyOS Kernel Started.Now in entry program.\n");
-	printk_color(rc_white, rc_black, "RainyOS RainySoftTeam & RainyOSTeam (C)Copyright 2022~2024\n");
-	printk_color(rc_white, rc_red, "RainyOS Alpha Version 0.11 Build 11\n");
-	printk("Oh, well.");
-	printk_color(rc_black, rc_red, "Happy new year!!\n");
+	printsf("s","Init debug");
+	printsf("s","Init GDT");
+	printsf("s","Init IDT");
+
+	//console_clear();
+	printsf("s","Load RainyOS Kernel");
+	printsf("s","Load Entry Program");
+	printk_color(rc_white, rc_black, "RainyOS RainySoftTeam & RainyOSTeam 2022~2024\n");
+	printk_color(rc_white, rc_red, "RainyOS Alpha Version 0.12 Build 12\n");
 
 	init_timer(200);
 
-	printk("kernel in memory start: 0x%08X\n", kern_start);
-	printk("kernel in memory end:   0x%08X\n", kern_end);
-	printk("kernel in memory used:   %d KB\n\n", (kern_end - kern_start) / 1024);
+	//printk("kernel in memory start: 0x%08X\n", kern_start);
+	//printk("kernel in memory end:   0x%08X\n", kern_end);
+	//printk("kernel in memory used:   %d KB\n\n", (kern_end - kern_start) / 1024);
 	
 	// show_memory_map();
 	init_pmm();
 	init_vmm();
 	init_heap();
 
-	printk_color(rc_black, rc_red, "\nThe Count of Physical Memory Page is: %u\n\n", phy_page_count);
+	//printk_color(rc_black, rc_red, "\nThe Count of Physical Memory Page is: %u\n\n", phy_page_count);
 
 	test_heap();
 
-	init_sched();
-
-	kernel_thread(thread, NULL);
+	init_sched();	
 
 	// 开启中断
 	enable_intr();
+	
+	init_keyboard();
+
+	kernel_thread(thread, NULL);
+
+	/*
+	while (1) {
+        if (fifo_status(&decoded_key) > 0) {
+			char c = fifo_get(&decoded_key);
+            console_putc_color(c, rc_black, rc_white);
+        }
+    }
+	*/
+
+	//readline();
 
 	while (1) {
 		asm volatile ("hlt");
