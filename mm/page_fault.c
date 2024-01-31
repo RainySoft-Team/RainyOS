@@ -11,7 +11,7 @@ void page_fault(pt_regs *regs)
 
 	// bit 0 为 0 指页面不存在内存里
 	if ( !(regs->err_code & 0x1)) {
-		printk_color(rc_black, rc_red, "Because the page wasn't present.\n");
+		printk_color(rc_black, rc_red, "Because the page wasn't present. Hmm...What happend is that?\n");
 	}
 	// bit 1 为 0 表示读错误，为 1 为写错误
 	if (regs->err_code & 0x2) {
