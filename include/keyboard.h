@@ -5,6 +5,8 @@
 
 extern fifo_t keyfifo, decoded_key;
 
+void init_keyboard();
+
 #define NR_SCAN_CODES 0x80
 #define MAP_COLS      3
 

@@ -1,6 +1,7 @@
 #include "keyboard.h"
 #include "fifo.h"
 #include "common.h"
+#include "heap.h"
 #include "idt.h"
 
 static int code_with_E0 = 0;
@@ -57,7 +58,7 @@ static void set_leds()
     kb_ack();
 }
 
-void init_keyboard() //init keyboard
+void init_keyboard()
 {
     uint32_t *keybuf = (uint32_t *) kmalloc(128);
     uint32_t *dkey_buf = (uint32_t *) kmalloc(128);
@@ -88,7 +89,7 @@ static uint8_t get_scancode()
 
 static void in_process(uint32_t key)
 {
-    char output[2] = {0, 0};
+    // char output[2] = {0, 0};
 
     if (!(key & FLAG_EXT)) {
         fifo_put(&decoded_key, key);

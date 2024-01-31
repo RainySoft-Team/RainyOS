@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "idt.h"
-#include "vmm.h"
 
 // 内核的偏移地址
 #define PAGE_OFFSET 	0xC0000000
