@@ -1,6 +1,5 @@
 #include "sched.h"
-#include "heap.h"
-#include "debug.h"
+#include "pmm.h"
 
 // 可调度进程链表
 struct task_struct *running_proc_head = NULL;

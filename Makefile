@@ -41,7 +41,7 @@ link:$(S_OBJECTS) $(C_OBJECTS)
 
 .PHONY:clean
 clean:
-	$(RM) $(S_OBJECTS) $(C_OBJECTS) rainyos_kernel
+	$(RM) -f $(S_OBJECTS) $(C_OBJECTS) rainyos_kernel
 
 .PHONY:iso
 rainyos_kernel.iso:rainyos_kernel

@@ -52,3 +52,5 @@ Mkfile.old
 dkms.conf
 rainyos_kernel
 rainyos_kernel.iso
+.cache/
+compile_commands.json
