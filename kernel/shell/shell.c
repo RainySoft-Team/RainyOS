@@ -1,11 +1,21 @@
+/*
+
+    shell.c
+
+    RainyOS Shell Program
+
+    RainyOSTeam & RainySoftTeam RainyOS 2022~2024
+
+*/
+
 #include "common.h"
 #include "shell.h"
 #include "console.h"
-//#include "fat16.h"
 #include "heap.h"
 #include "string.h"
 #include "fifo.h"
 #include "keyboard.h"
+#include "cmos.h"
 
 #define MAX_COMMAND_LEN 100
 #define MAX_ARG_NR 30
@@ -15,7 +25,7 @@
 
 static int read_key_blocking(char *buf){
     while (fifo_status(&decoded_key) == 0);
-    *buf++ == fifo_get(&decoded_key);
+    *buf++ = fifo_get(&decoded_key);
     return 0;
 }
 
@@ -90,16 +100,100 @@ static void cmd_touch(int argc, uint8_t **argv)
 }
 */
 
+void shell_clear(int argc){
+    if (argc != 1){
+        console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
+    }
+    console_clear();
+}
+
+void shell_ver(int argc){
+    if (argc != 1){
+        console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
+    }
+    console_write("RainyOS Alpha Version 0.32 Build 15\n");
+    console_write("RainyShell Alpha Version 0.12\n\n");
+}
+
+void shell_build(int argc){
+    if (argc != 1){
+        console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
+    }
+    console_write("Build 15\n\n");
+}
+
+void shell_bugs(int argc){
+    if (argc != 1){
+        console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
+    }
+    console_write("______________________________________\n");
+    console_write("|Bugs in this version you should know|\n");
+    console_write("|----------------------------------------------------------\n");
+    console_write("|Note: You should know these bugs to be happy in using    |\n");
+    console_write("|---------------------------------------------------------|\n");
+    console_write("|1.If you type some space keys in the command line, and y-|\n");
+    console_write("|ou press enter, your RainyOS will be crash.              |\n");
+    console_write("|---------------------------------------------------------|\n\n");
+}
+
+void shell_help(int argc){
+    if (argc != 1){
+        console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
+    }
+    console_write_color("              RainyOS Help List Table            \n", rc_black, rc_magenta);
+    console_write("_______________________________________________________\n");
+    console_write("|NAME       |USAGE                                    |\n");
+    console_write("|-----------|-----------------------------------------|\n");
+    console_write("|HELP       |No argument. Show this message           |\n");
+    console_write("|BUILD      |No argument. Show OS build type          |\n");
+    console_write("|VER        |No argument. Show OS version             |\n");
+    console_write("|CLEAR      |No argument. Clean the screen            |\n");
+    console_write("|TEST       |No argument. Test system basic functions |\n");
+    console_write("|CREDITS    |No argument. Show credits list           |\n");
+    console_write("|BUGS       |No argument. Show bugs in this version   |\n");
+    console_write("|DATE       |No argument. Show date time              |\n");
+    console_write("|-----------------------------------------------------|\n\n");
+}
+
+void shell_test(int argc){
+    if (argc != 1){
+        console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
+    }
+    console_write_color("Start test\n\n", rc_black, rc_green);
+
+    console_write("QWERTYUIOPASDFGHJKLZXCVBNM\n");
+    console_write("qwertyuiopasdfghjklzxcvbnm\n");
+    console_write("1234567890+-*/[]{}()<>,.:;\n");
+    console_write("?!@#$%^&`~|\n\n");
+
+    console_write_color("Over\n\n", rc_black, rc_green);
+}
+
+void shell_credits(int argc){
+    if (argc != 1){
+        console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
+    }
+    console_write("RainyOSTeam & RainySoftTeam 2022~2024\n");
+    console_write("EVERYONE\n");
+    console_write("And u\n\n");
+}
+
+void shell_date(int argc){
+    if (argc != 1){
+        console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
+    }
+    get_date_time();
+    console_write("\n");
+}
+
 void shell()
 {
     uint8_t com[MAX_COMMAND_LEN];
     uint8_t *argv[MAX_ARG_NR];
     int argc = -1;
-    
-    console_clear();
 
     while (true) {
-        console_write("RainyOS> "); // 提示符，可自行修改
+        console_write("RainyOS # "); // 提示符，可自行修改
         
         memset(com, 0, MAX_COMMAND_LEN); // 清空上轮输入
         readline(com, MAX_COMMAND_LEN); // 读入一行
@@ -112,20 +206,32 @@ void shell()
             console_write("shell: error: number of arguments exceed MAX_ARG_NR(30)\n");
             continue;
         }
-        /*
-        if (!strcmp("dir", argv[0]) || !strcmp("ls", argv[0])) {
-            cmd_ls(argc, argv);
-        } else if (!strcmp("touch", argv[0])) {
-            cmd_touch(argc, argv);
-        }
-        */
+
         if (!strcmp("clear", argv[0])){
-            console_clear();
+            shell_clear(argc);
         }
         else if (!strcmp("ver", argv[0])) {
-            console_write("Build 15");
+            shell_ver(argc);
         }
-        else console_write("Command not found.\n");
+        else if (!strcmp("build", argv[0])) {
+            shell_build(argc);
+        }
+        else if (!strcmp("help", argv[0])) {
+            shell_help(argc);
+        }
+        else if (!strcmp("test", argv[0])) {
+            shell_test(argc);
+        }
+        else if (!strcmp("credits", argv[0])) {
+            shell_credits(argc);
+        }
+        else if (!strcmp("bugs", argv[0])) {
+            shell_bugs(argc);
+        }
+        else if (!strcmp("date", argv[0])) {
+            shell_date(argc);
+        }
+        else console_write("Command not found.\n\n");
     }
     ASSERT(0 && "unknown error on reading keys.");
 }
