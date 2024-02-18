@@ -3,7 +3,7 @@ About this source code
 -   RainyOS Source Code
 -   RainySoftTeam & RainyOSTeam 2022~2024
 -
--   Build: 17
+-   Build: 16
 -   Version: Alpha v0.22
 
 Oh, here.
