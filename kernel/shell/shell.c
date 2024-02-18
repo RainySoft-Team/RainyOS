@@ -122,15 +122,18 @@ void shell_bugs(int argc){
     if (argc != 1){
         console_write_color("Command unsupport more than 1 argument\n", rc_black, rc_red);
     }
+    #ifdef HAVE_BUGS
+    console_write("______________________________________\n");
+    console_write("|Bugs in this version you should know|\n");
+    console_write("|----------------------------------------------------------\n");
+    console_write("|Note: You should know these bugs to be happy in using    |\n");
+    console_write("|---------------------------------------------------------|\n");
+    console_write("|1.If you type some space keys in the command line, and y-|\n");
+    console_write("|ou press enter, your RainyOS will be crash.              |\n");
+    console_write("|---------------------------------------------------------|\n\n");
+    #else
     console_write("We haven't found bugs in RainyOS \\('v')/ \n");
-    // console_write("______________________________________\n");
-    // console_write("|Bugs in this version you should know|\n");
-    // console_write("|----------------------------------------------------------\n");
-    // console_write("|Note: You should know these bugs to be happy in using    |\n");
-    // console_write("|---------------------------------------------------------|\n");
-    // console_write("|1.If you type some space keys in the command line, and y-|\n");
-    // console_write("|ou press enter, your RainyOS will be crash.              |\n");
-    // console_write("|---------------------------------------------------------|\n\n");
+    #endif
 }
 
 void shell_help(int argc){

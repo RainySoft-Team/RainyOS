@@ -1,6 +1,9 @@
 #ifndef INCLUDE_TYPES_H_
 #define INCLUDE_TYPES_H_
 
+// #define HAVE_BUGS
+#define NEED_UTC_8
+
 #ifndef NULL
 	#define NULL 0
 #endif
