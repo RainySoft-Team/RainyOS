@@ -13,6 +13,14 @@
 	#define FALSE 0
 #endif
 
+#define ZEROPAD		1	// pad with zero
+#define SIGN	 	2   	// unsigned/signed long
+#define PLUS    	4	// show plus
+#define SPACE	  	8   	// space if plus
+#define LEFT	 	16  	// left justified
+#define SPECIAL		32  	// 0x
+#define SMALL	  	64  	// use 'abcdef' instead of 'ABCDEF'
+
 typedef unsigned int   uint32_t;
 typedef          int   int32_t;
 typedef unsigned short uint16_t;
