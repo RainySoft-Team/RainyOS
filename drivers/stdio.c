@@ -4,11 +4,15 @@
 
 int printf(const char *format, ...){
     va_list args;
-    va_start(args, format);
     int printed;
+	char print_buf[1024];
+	
     va_start(args, format);
-    printed = vsprintf(printed,format,args);
+    printed = vsprintf(print_buf,format,args);
     va_end(args);
+	
+	console_write(printed);
+
     return printed;
 }
 
