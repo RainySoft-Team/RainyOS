@@ -23,6 +23,8 @@
 #include "keyboard.h"
 #include "shell.h"
 #include "multiboot.h"
+#include "acpi.h"
+#include "int32.h"
 
 // 内核初始化函数
 void kern_init();
@@ -85,17 +87,23 @@ int flag = 0;
 
 int thread(void *arg)
 {
+	asm volatile ("hlt");
+	asm volatile ("hlt");
+	asm volatile ("hlt");
+	asm volatile ("hlt");
+
+	///*
 	console_clear();
 
-	console_write_color("RainyOS v0.32 (Alpha, Jan 30 2024, 21:30:32) [GCC 12.2.0] on Machine\n", rc_black, rc_green);
-	console_write_color("RainyShell v0.12 (Alpha, Jan 30 2024, 21:20:32) [GCC 12.2.0] on RainyOS\n", rc_black, rc_green);
+	console_write_color("RainyOS v0.58 (Alpha, Feb 14 2024, 21:40:17) [GCC 12.2.0] on Machine\n", rc_black, rc_green);
+	console_write_color("RainyShell v0.32 (Alpha, Feb 14 2024, 22:40:17) [GCC 12.2.0] on RainyOS\n", rc_black, rc_green);
 	console_write_color("Type 'help' to see the help list table.\n", rc_black, rc_green);
-	#ifdef HAVE_BUGS
-	console_write_color("WARNING: You should type 'bugs' to see the bugs in this version. Using careful!\n", rc_black, rc_red);
-	#endif
+	print_warn("You should type 'bugs' to see the bugs in this version. Be careful!\n");
 	console_write_color("Now you are in the shell.\n\n", rc_black, rc_light_cyan);
 
+
 	shell();
+	//*/
 
 	return 0;
 }
@@ -125,7 +133,7 @@ void kern_init()
 	print_succ("Load RainyOS Kernel");
 	print_succ("Load Entry Program");
 	printk_color(rc_white, rc_black, "RainyOS RainySoftTeam & RainyOSTeam 2022~2024\n");
-	printk_color(rc_white, rc_red, "RainyOS Alpha Version 0.12 Build 12\n");
+	printk_color(rc_white, rc_red, "RainyOS Alpha Version 0.58 Build 17\n");
 
 	init_timer(200);
 
@@ -142,13 +150,38 @@ void kern_init()
 
 	test_heap();
 
-	init_sched();	
+	init_sched();
+
+	init_keyboard();
+
+	//init_acpi();
+	#define HAVE_BUGS
 
 	// 开启中断
 	enable_intr();
-	
-	init_keyboard();
 
+	/*
+	regs16_t regs;
+    regs.ax = 0x4f02;
+    regs.bx = 0x4105;
+    _int32(0x10, &regs);
+
+	*Nooooooooooooooooooooo!!!!! Why it damage the memory page!!
+    *Ahhhhhhhh NOOOO!!! F**king d**n s**tty Memory Page, I hate you!!!
+
+    */
+
+	//Angry code *Laugh*
+
+	/*
+	 *
+	 *Ummmm...Here is some about int32.
+	 *Well we know. int32 will damage our memory page.
+	 *So when it return to Protect Mode, we can try to open it again..
+	 *(Need it close the Memory Page first? I don't know...)
+	 *
+	 */
+	
 	kernel_thread(thread, NULL);
 
 	/*
@@ -166,6 +199,6 @@ void kern_init()
 		asm volatile ("hlt");
 	}
 
-	printk("Kernel done");
+	//Here is done
 }
 

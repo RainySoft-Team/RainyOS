@@ -3,8 +3,8 @@ About this source code
 -   RainyOS Source Code
 -   RainySoftTeam & RainyOSTeam 2022~2024
 -
--   Build: 16
--   Version: Alpha v0.22
+-   Build: 17
+-   Version: Alpha v0.58
 
 Oh, here.
 We used some codes from different places.

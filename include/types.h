@@ -1,9 +1,6 @@
 #ifndef INCLUDE_TYPES_H_
 #define INCLUDE_TYPES_H_
 
-// #define HAVE_BUGS
-#define NEED_UTC_8
-
 #ifndef NULL
 	#define NULL 0
 #endif
@@ -21,5 +18,9 @@ typedef unsigned char  uint8_t;
 typedef          char  int8_t;
 
 typedef int32_t pid_t;
+
+typedef int8_t bool;
+#define true 1
+#define false 0
 
 #endif 	// INCLUDE_TYPES_H_

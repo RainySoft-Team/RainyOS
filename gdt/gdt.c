@@ -12,7 +12,6 @@ gdt_entry_t gdt_entries[GDT_LENGTH];
 // GDTR
 gdt_ptr_t gdt_ptr;
 
-
 // 全局描述符表构造函数，根据下标构造
 static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran);
 

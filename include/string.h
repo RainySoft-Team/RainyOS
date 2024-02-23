@@ -19,6 +19,17 @@ static inline void memset(void *dest, uint8_t val, uint32_t len)
 	}
 }
 
+static inline int memcmp(const void *a_, const void *b_, uint32_t size)
+{
+    const char *a = a_;
+    const char *b = b_;
+    while (size-- > 0) {
+        if (*a != *b) return *a > *b ? 1 : -1;
+        a++, b++;
+    }
+    return 0;
+}
+
 static inline void bzero(void *dest, uint32_t len)
 {
 	memset(dest, 0, len);
