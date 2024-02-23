@@ -25,10 +25,11 @@ void __cdecl __va_start(va_list* , ...);
 //--------------------------------------------------------------------
 
 
-
 #define va_arg(ap, type)           (__crt_va_arg(ap, type))
 #define va_start __crt_va_start
 #define va_end   __crt_va_end
+#define va_copy(destination, source) ((destination) = (source))
+
 //抄代码得抄完整，我的stdio.c不然都编译不了
 
 #endif 	// INCLUDE_VARGS_H_
