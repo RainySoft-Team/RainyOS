@@ -1,4 +1,6 @@
+#include "gdt.h"
 #include "pmm.h"
+#include "vmm.h"
 #include "heap.h"
 #include "task.h"
 #include "sched.h"
@@ -48,9 +50,7 @@ int32_t kernel_thread(int (*fn)(void *), void *arg)
 
 void kthread_exit()
 {
-	// 获取eax的值
-	uint32_t val;
-    __asm__ __volatile__("movl %%eax, %0\n\t" : "=r"(val)::"memory");
+	register uint32_t val asm ("eax");
 
 	printk("Thread exited with value %d\n", val);
 

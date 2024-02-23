@@ -30,4 +30,9 @@ typedef          char  int8_t;
 
 typedef int32_t pid_t;
 
+typedef int8_t bool;
+
+#define true 1
+#define false 0
+
 #endif 	// INCLUDE_TYPES_H_
