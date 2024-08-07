@@ -1,23 +1,34 @@
-About this source code
+# RainyOS Codename Drizzle
+## Refactored RainyOS.
+A long time, the new version is coming.
+RainyOS is better now. More better, more clearly.
 
--   RainyOS Source Code
--   RainySoftTeam & RainyOSTeam 2022~2024
--
--   Build: 17
--   Version: Alpha v0.58
+## Running:
+Machine: At last i386 PC. 512MB memory or more(Could be larger than 4GB, but it will be only use about 4GB). SVGA.
+Boot: Legacy booting.
 
-Oh, here.
-We used some codes from different places.
-Here is the list:
+## Compiling:
+System: Compiling RainyOS on Linux releases(Could be WSL).
+Tools: GNU tools. Such like GCC, LD, etc. NASM assemblier. The last you need XORRISO.
 
--   Hurlex http://wiki.0xffffff.org/
--   Orange's OS Tutorial
+### How to?
 
-If you want to compile this source code, you should be use Linux.
-Some tools are not support on Windows.
-You need GCC, NASM, LD, GRUB-MKRESCUE.
-See more in Makefile.
+Download the source code. And then CD into the source path.
+Then do "make".
 
-Visit http://rainysoft-team.github.io/ for more information.
+    make
 
-Thanks for everyone.
+It will start compiling.
+For running, do "make run".
+
+    make run
+
+Done.
+
+## Thanks.
+Hurlex Kernel: https://wiki.0xffffff.org/
+Uinxed Kernel: https://gitee.com/viudiratech/uinxed-kernel/ https://github.com/ViudiraTech/Uinxed-Kernel
+
+GPLv2 License.
+
+### RainySoft-Team
