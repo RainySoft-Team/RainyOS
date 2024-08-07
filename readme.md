@@ -16,12 +16,12 @@ Tools: GNU tools. Such like GCC, LD, etc. NASM assemblier. The last you need XOR
 Download the source code. And then CD into the source path.
 Then do "make".
 
-        'make'
+        make
 
 It will start compiling.
 For running, do "make run".
 
-        'make run'
+        make run
 
 Done.
 
